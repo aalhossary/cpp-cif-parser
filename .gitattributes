@@ -13,8 +13,6 @@ include/DICParserBase.h -text
 include/DICParserInt.h -text
 include/DICScannerBase.h -text
 include/DICScannerInt.h -text
-lib/.cvsignore -text
-obj/.cvsignore -text
 src/CifFileReadDef.C -text
 src/CifParser.y -text
 src/CifParserBase.C -text
