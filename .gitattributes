@@ -1,1 +1,26 @@
 * text=auto !eol
+/.cproject -text
+/.project -text
+.settings/org.eclipse.core.runtime.prefs -text
+/Makefile -text
+/SConscript -text
+include/CifFileReadDef.h -text
+include/CifParserBase.h -text
+include/CifParserInt.h -text
+include/CifScannerBase.h -text
+include/CifScannerInt.h -text
+include/DICParserBase.h -text
+include/DICParserInt.h -text
+include/DICScannerBase.h -text
+include/DICScannerInt.h -text
+lib/.cvsignore -text
+obj/.cvsignore -text
+src/CifFileReadDef.C -text
+src/CifParser.y -text
+src/CifParserBase.C -text
+src/CifScanner.l -text
+src/CifScannerBase.C -text
+src/DICParser.y -text
+src/DICParserBase.C -text
+src/DICScanner.l -text
+src/DICScannerBase.C -text
