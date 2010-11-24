@@ -213,14 +213,33 @@ int CifScanner::ProcessUnderscore()
 int CifScanner::ProcessBadStrings()
 {
      if (!_isText) {
+        /*
+        ** The string is not part of a multiline CIF value, but a CIF value
+        ** anywhere else, in a loop or out of the loop.
+        */
         _j=0;
         yylval.cBuf=&yytext[_j];
 #if DEBUG
         log << "UQ: String " << yylval.cBuf << endl;
 #endif
+
+        unsigned int cBufLen = strlen(yylval.cBuf);
+        for (unsigned int i = 0; i < cBufLen; ++i)
+        {
+            if ((yylval.cBuf[i] == '\'') || (yylval.cBuf[i] == '\"'))
+            {
+                log << "ERROR - Invalid character at line " <<
+                  String::IntToString(NDBlineNo) << " in CIF value " <<
+                  yylval.cBuf << endl;
+            }
+        }
+
         return(ITEMVALUE_CIF);
      }
      else {
+        /*
+        ** The string is part of a multiline CIF value. It is processed as is.
+        */
 #if DEBUG
           log << "UQx: String " << yytext<< endl;
 #endif
