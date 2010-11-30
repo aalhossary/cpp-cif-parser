@@ -68,7 +68,6 @@ CifParser::CifParser(CifFile *fo, bool verbose)
     _verbose=verbose;
 
     Clear();
-    errorLog.clear();
 
     CifParserP = this;
 }
@@ -94,7 +93,6 @@ CifParser::CifParser(CifFile *fo, CifFileReadDef readDef, bool verbose)
     _verbose=verbose;
 
     Clear();
-    errorLog.clear();
     _readDef = readDef;
 
     CifParserP = this;

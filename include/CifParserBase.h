@@ -225,7 +225,6 @@ class CifParser : public CifScanner
         string _prevDataBlockName;
         void _ComplexWriteTable();
 
-        string errorLog;
         int _err, _warn;
 };
  

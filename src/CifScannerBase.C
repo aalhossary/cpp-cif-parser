@@ -69,6 +69,7 @@ CifScanner::CifScanner(istream *in) {
 void CifScanner::Clear(void) {
   _tBuf=NULL;
   _isText = false;
+  errorLog.clear();
   NDBlineNo=1;
 }
 
@@ -231,6 +232,12 @@ int CifScanner::ProcessBadStrings()
                 log << "ERROR - Invalid character at line " <<
                   String::IntToString(NDBlineNo) << " in CIF value " <<
                   yylval.cBuf << endl;
+
+                errorLog += "ERROR - Invalid character at line ";
+                errorLog += String::IntToString(NDBlineNo);
+                errorLog += " in CIF value ";
+                errorLog += yylval.cBuf;
+                errorLog += '\n';
             }
         }
 

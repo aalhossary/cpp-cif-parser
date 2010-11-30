@@ -55,6 +55,7 @@ class CifScanner // : public CifFlexLexer
 
  protected:
   std::ofstream log;
+  std::string errorLog;
   bool _verbose;
   void alt_yymore(void);
   void OpenLog(const std::string& logName, bool verboseLevel);
