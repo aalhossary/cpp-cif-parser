@@ -98,7 +98,8 @@ CifParser::CifParser(CifFile *fo, CifFileReadDef readDef, bool verbose)
     CifParserP = this;
 }
 
-void CifParser::Parse(const string& fileName, string& diagnostics)
+void CifParser::Parse(const string& fileName, string& diagnostics,
+  const string& parseLogFileName)
 {
     diagnostics.clear();
 
@@ -113,9 +114,16 @@ void CifParser::Parse(const string& fileName, string& diagnostics)
     }
 
     string logFileName;
-    RcsbFile::RelativeFileName(logFileName, fileName);
+    if (!parseLogFileName.empty())
+    {
+        logFileName = parseLogFileName;
+    }
+    else
+    {
+        RcsbFile::RelativeFileName(logFileName, fileName);
 
-    logFileName += "-parser.log";
+        logFileName += "-parser.log";
+    }
 
     OpenLog(logFileName, _verbose);
 
