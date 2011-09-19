@@ -741,8 +741,8 @@ int CifParser::ProcessItemValuePair(void)
 void CifParser::ProcessAssignments()
 {
   if (_curValueNo!=0) {
-  log <<"Warning - Number of data values is not exact multiples of the number of data names   (look above line "<<NDBlineNo<<")"<<endl;
-  errorLog += "Warning - Number of data values is not exact multiples of the number of data names   (look above line ";
+  log <<"ERROR - Number of data values is not exact multiples of the number of data names   (look above line "<<NDBlineNo<<")"<<endl;
+  errorLog += "ERROR - Number of data values is not exact multiples of the number of data names   (look above line ";
   errorLog += String::IntToString(NDBlineNo);
   errorLog += ")";
   errorLog += '\n';
