@@ -407,9 +407,9 @@ int CifParser::ProcessItemNameList(void)
     errorLog += " item ";
     errorLog += _tBufKeyword;
     errorLog += '\n';
-    _fieldList[_curItemNo].clear();
+    _fieldList.clear();
     _warn++;
-    _curItemNo++;
+    _curItemNo = 0;
     return(0);
   }
 
