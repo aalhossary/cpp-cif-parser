@@ -94,6 +94,21 @@ int CifScanner::ProcessNone()
 #endif  
           NDBlineNo++;
           if (_isText == true) {          /* end of text value */
+#ifdef VLAD_DEBUG
+             cout << "DEBUG - In CifScanner::ProcessNone() - end of multi-line text \"" << yytext << "\"" << endl;
+#endif
+
+             // Check if the first character is semicolon followed by a
+             // non-newline. This is considered invalid.
+             if ((yyleng > 1) && ((yytext[0] == ';') && (yytext[1] != '\n')))
+             {
+                 log << "ERROR - Invalid syntax. Improperly placed semicolon in line " << NDBlineNo - 1 <<  endl;
+
+                 errorLog += "ERROR - Invalid syntax. Improperly placed semicolon in line ";
+                 errorLog += String::IntToString(NDBlineNo - 1);
+                 errorLog += '\n';
+             }
+
              for (_i=yyleng-1; _i >= 0; _i--) {
                if ( yytext[_i] == ' ' || yytext[_i] == '\t' ||  yytext[_i] == '\n' || yytext[_i] == '\r') {
                   yytext[_i]='\0';
@@ -112,6 +127,9 @@ int CifScanner::ProcessNone()
 #endif
              return(LSITEMVALUE_CIF);
           } else {  /* text value begins */
+#ifdef VLAD_DEBUG
+             cout << "DEBUG - In CifScanner::ProcessNone() - begin of multi-line text \"" << yytext << "\"" << endl;
+#endif
              _isText = true;
 
              for (_i=0; _i < yyleng; _i++) {
