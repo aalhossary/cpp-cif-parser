@@ -46,6 +46,9 @@ char* Glob_dataBlockName = NULL;
 
 CifParser* CifParserP = NULL;
 
+#ifdef PDB_TRACE
+using std::cout;
+#endif
 using std::endl;
 
 CifParser::CifParser(CifFile *fo, bool verbose)
@@ -517,10 +520,16 @@ int CifParser::ProcessValueList(void)
 
     if (!_pBufValue.empty())
     {
+#ifdef PDB_TRACE
+        cout << "TRACE: value in list \"" << _pBufValue << "\"" << endl;
+#endif
 	_tbl->UpdateCell(_curRow - 1, _fieldList[_curValueNo], _pBufValue);
     }
     else
     {
+#ifdef PDB_TRACE
+        cout << "DEBUG: value in list \"" << CifString::UnknownValue << "\"" << endl;
+#endif
         _tbl->UpdateCell(_curRow - 1, _fieldList[_curValueNo], CifString::UnknownValue);
     }
   }
@@ -701,12 +710,22 @@ int CifParser::ProcessItemValuePair(void)
     if (!_pBufValue.empty())
     {
         for (unsigned int i = 0; i < numRows; i++)
+        {
+#ifdef PDB_TRACE
+            cout << "DEBUG: value in pair \"" << _pBufValue << "\"" << endl;
+#endif
             _tbl->UpdateCell(i, keywordName, _pBufValue);
+        }
     }
     else
     {
         for (unsigned int i = 0; i < numRows; i++)
+        {
+#ifdef PDB_TRACE
+            cout << "DEBUG: value in pair \"" << CifString::UnknownValue << "\"" << endl;
+#endif
             _tbl->UpdateCell(i, keywordName, CifString::UnknownValue);
+        }
     }
   }
   else
@@ -724,12 +743,22 @@ int CifParser::ProcessItemValuePair(void)
     if (!_pBufValue.empty())
     {
         for (unsigned int i = 0; i < _tbl->GetNumRows(); i++)
+        {
+#ifdef PDB_TRACE
+          cout << "DEBUG: value in pair \"" << _pBufValue << "\"" << endl;
+#endif
           _tbl->UpdateCell(i, keywordName, _pBufValue);
+        }
     }
     else
     {
         for (unsigned int i = 0; i < _tbl->GetNumRows(); i++)
+        {
+#ifdef PDB_TRACE
+            cout << "DEBUG: value in pair \"" << CifString::UnknownValue << "\"" << endl;
+#endif
             _tbl->UpdateCell(i, keywordName, CifString::UnknownValue);
+        }
     }
   }
 

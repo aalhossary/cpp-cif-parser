@@ -334,7 +334,12 @@ int CifScanner::ProcessEof()
 {
    if (_isText == true) {
       _isText=false;
-           log<<"String is not not finish at line "<<NDBlineNo<< endl;
+
+          errorLog += "ERROR - String is not finished above line ";
+          errorLog += String::IntToString(NDBlineNo);
+          errorLog += '\n';
+
+           log<<"ERROR - String is not finished above line "<<NDBlineNo<< endl;
            return(1);
         }
         else
