@@ -43,6 +43,9 @@ char* Glob_dataBlockNameDIC;
 DICParser* DICParserP = NULL;
 
 using std::endl;
+#ifdef VLAD_DEBUG
+using std::cout;
+#endif
 
 DICParser::DICParser(DicFile* fo, CifFile* ddl_in, bool verbose)
 {
@@ -555,6 +558,13 @@ void DICParser::ProcessItemValuePair(void)
   }
 #endif
 
+  if ((_tBufKeyword == "_item.name") && (_pBufValue != _curDataBlockNameSave))
+  {
+      log << "ERROR - " << "In save frame \"save_" << _curDataBlockNameSave <<
+        "\", \"_item.name\" has value \"" << _pBufValue << "\" at line " <<
+        NDBlineNo << endl;
+  }
+
   CifString::GetCategoryFromCifItem(categoryName, _tBufKeyword);
   if (categoryName.empty())
   {
@@ -991,13 +1001,12 @@ void DICParser::ProcessItemValuePairSave(void)
         _savetbl->AddRow();
  
     _savetbl->UpdateCell(_savetbl->GetNumRows() - 1, keywordName, _pBufValue);
-#ifndef VLAD_TRY_DETECT_BAD_ID
+
     if (_tBufKeyword == "_category.id")
         if (_pBufValue != _curDataBlockNameSave)
-            log << "Mismatch in category save frame name \"" <<
-              _curDataBlockNameSave << "\" and _catgory.id value \"" <<
-              _pBufValue << "\"" << endl;
-#endif
+            log << "ERROR - In save frame \"save_" << _curDataBlockNameSave << 
+              "\", \"_catgory.id\" has value \"" << _pBufValue <<
+              "\" at line " << NDBlineNo << endl;
     } else
     if (_savetbl->GetNumRows() == 0)
         _savetbl->AddRow();
@@ -1216,6 +1225,18 @@ void DICParser::ProcessSaveBegin(void)
   _saveobj = new CifFile();
   _prevDataBlockNameSave = _curDataBlockNameSave;
   _curDataBlockNameSave = &(Glob_dataBlockNameDIC)[5];
+
+  // Check if the save frame was already indicated
+  if (_saveFrames.find(_curDataBlockNameSave) != _saveFrames.end())
+  {
+      log << "INFO - Duplicate save frame \"" << _curDataBlockNameSave <<
+        "\" at line " << NDBlineNo << endl;
+  }
+  else
+  {
+      _saveFrames.insert(_curDataBlockNameSave);
+  }
+
   _savetbl=NULL;
   _pBufValue = Glob_dataBlockNameDIC;
 }

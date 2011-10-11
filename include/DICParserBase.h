@@ -21,6 +21,7 @@
 
 
 #include <iostream>
+#include <set>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -235,6 +236,7 @@ class DICParser : public DICScanner
         string _prevDataBlockNameSave;
         string _tmpDataBlockNameSave;
         string errorLog;
+        std::set<string> _saveFrames;
         void ProcessLoopDeclaration(void);
         void ProcessItemNameList(void);
         void ProcessValueList(void);
