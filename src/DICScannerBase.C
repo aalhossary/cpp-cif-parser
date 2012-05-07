@@ -290,6 +290,10 @@ int DICScanner::ProcessUnquotedString()
 {
      if (!_isText) {
         _j=0;
+        /*
+        ** The string is not part of a multiline CIF value, but a CIF value
+        ** anywhere else, in a loop or out of the loop.
+        */
 /*        for (_i=yyleng-1; _i >= 0; _i--) {
             if ( yytext[_i] == '\'' || yytext[_i] == '\"') {
                yytext[_i]='\0';
@@ -309,9 +313,23 @@ int DICScanner::ProcessUnquotedString()
 #if DEBUG
         log << "UQ: String " << yylval.cBuf << endl;
 #endif
+        unsigned int cBufLen = strlen(yylval.cBuf);
+        for (unsigned int i = 0; i < cBufLen; ++i)
+        {
+            if ((yylval.cBuf[i] == '\'') || (yylval.cBuf[i] == '\"'))
+            {
+                log << "ERROR - Invalid character at line " <<
+                  String::IntToString(NDBlineNo) << " in CIF value " <<
+                  yylval.cBuf << endl;
+            }
+        }
+
         return(ITEMVALUE_DIC);
      }
      else {
+        /*
+        ** The string is part of a multiline CIF value. It is processed as is.
+        */
 #if DEBUG
           log << "UQx: String " << yytext<< endl;
 #endif
