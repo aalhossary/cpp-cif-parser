@@ -242,6 +242,7 @@ int CifScanner::ProcessBadStrings()
         log << "UQ: String " << yylval.cBuf << endl;
 #endif
 
+#ifdef REPORT_EMBEDDED_QUOTES
         unsigned int cBufLen = strlen(yylval.cBuf);
         for (unsigned int i = 0; i < cBufLen; ++i)
         {
@@ -258,6 +259,7 @@ int CifScanner::ProcessBadStrings()
                 errorLog += '\n';
             }
         }
+#endif // REPORT_EMBEDDED_QUOTES
 
         return(ITEMVALUE_CIF);
      }
