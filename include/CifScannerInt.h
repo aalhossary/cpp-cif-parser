@@ -12,8 +12,6 @@
 #ifndef CIF_SCANNER_INT_H
 #define CIF_SCANNER_INT_H
 
-#define YY_NO_UNPUT
-
 #ifdef __cplusplus
 extern "C" {
 #endif

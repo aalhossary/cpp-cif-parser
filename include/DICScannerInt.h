@@ -12,8 +12,6 @@
 #ifndef DIC_SCANNER_INT_H
 #define DIC_SCANNER_INT_H
 
-#define YY_NO_UNPUT
-
 #ifdef __cplusplus
 extern "C" {
 #endif
