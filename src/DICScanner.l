@@ -22,6 +22,8 @@
 %}
 
 /* %option noyywrap c++ yyclass="DICScanner" prefix="DIC" */
+%option noinput
+%option nounput
 
 %%
 

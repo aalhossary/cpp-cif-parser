@@ -213,9 +213,6 @@ class DICParser : public DICScanner
         ISTable * cattbl;
         ISTable * itemtbl;
         CifFile *ddl;
-        int itemColIndex;
-        int catColIndex;
-        int colIndex2;
         vector<string> listcat, listitem;
         vector<string> listitem2;
         int _nTablesInBlock;
@@ -228,7 +225,7 @@ class DICParser : public DICScanner
         string _prevDataBlockName;
         int _nTablesInBlockSave;
         int _curItemNoSave, _curValueNoSave;
-        int _numDataBlocksSave, _fieldListAllocSave;
+        int _fieldListAllocSave;
         int _curRowSave;
         vector<string> _fieldListSave;
         string _curCategoryNameSave;

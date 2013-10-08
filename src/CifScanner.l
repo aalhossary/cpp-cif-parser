@@ -22,6 +22,8 @@
 %}
 
 /* %option noyywrap c++ yyclass="CifScanner" prefix="Cif" */
+%option noinput
+%option nounput
 
 CR      \r
 LF      \n
