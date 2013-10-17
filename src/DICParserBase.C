@@ -15,6 +15,7 @@
   PURPOSE:    A DDL 2.1 compliant CIF file parser.
 */
 
+#include <stdexcept>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +43,7 @@ char* Glob_dataBlockNameDIC;
 
 DICParser* DICParserP = NULL;
 
+using std::exception;
 using std::endl;
 #ifdef VLAD_DEBUG
 using std::cout;
@@ -565,7 +567,15 @@ void DICParser::ProcessItemValuePair(void)
         NDBlineNo << endl;
   }
 
-  CifString::GetCategoryFromCifItem(categoryName, _tBufKeyword);
+  try
+  {
+    CifString::GetCategoryFromCifItem(categoryName, _tBufKeyword);
+  }
+  catch (const exception& exc)
+  {
+
+  }
+
   if (categoryName.empty())
   {
     log << "Error in category name at line " << NDBlineNo << " value " << _tBufKeyword << endl;
@@ -917,7 +927,15 @@ void DICParser::ProcessItemValuePairSave(void)
   _curItemNoSave  = 1;
   _curValueNoSave = 0;
 
-  CifString::GetCategoryFromCifItem(categoryName, _tBufKeyword);
+  try
+  {
+      CifString::GetCategoryFromCifItem(categoryName, _tBufKeyword);
+  }
+  catch (const exception& exc)
+  {
+
+  }
+
   if (categoryName.empty())
   {
     log << "Error in category name at line (save frame) " << NDBlineNo << " value " << _tBufKeyword << endl;
@@ -1008,10 +1026,12 @@ void DICParser::ProcessItemValuePairSave(void)
               "\", \"_catgory.id\" has value \"" << _pBufValue <<
               "\" at line " << NDBlineNo << endl;
     } else
+    {
     if (_savetbl->GetNumRows() == 0)
         _savetbl->AddRow();
 
     _savetbl->UpdateCell(_savetbl->GetNumRows() - 1, keywordName, CifString::UnknownValue);
+    }
   }
 #ifdef VLAD_DELETED
   catch (out_of_range)

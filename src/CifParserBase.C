@@ -506,6 +506,20 @@ int CifParser::ProcessValueList(void)
   }
 #endif
 
+  if (_fieldList.empty())
+  {
+      log << "ERROR: Parsing error at line " << NDBlineNo << " value [" << _pBufValue << "]" << endl;
+
+      errorLog += "ERROR: Parsing error at line ";
+      errorLog += String::IntToString(NDBlineNo);
+      errorLog += " value [";
+      errorLog += _pBufValue;
+      errorLog += "]";
+      errorLog += '\n';
+
+      return(0);
+  }
+
   if (!_fieldList[_curValueNo].empty())
   {
     // If it is a value for a valid item, process it
