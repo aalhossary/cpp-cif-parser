@@ -98,6 +98,10 @@ int CifScanner::ProcessNone()
              cout << "DEBUG - In CifScanner::ProcessNone() - end of multi-line text \"" << yytext << "\"" << endl;
 #endif
 
+#ifdef VLAD_REMOVED_AS_THIS_VIOLATES_CIF_STANDARD
+             // It turns out that standard only indicates that \n; is a
+             // terminator. Anything can be after the semicolon.
+
              // Check if the first character is semicolon followed by a
              // non-newline. This is considered invalid.
              if ((yyleng > 1) && ((yytext[0] == ';') && (yytext[1] != '\n')))
@@ -108,6 +112,7 @@ int CifScanner::ProcessNone()
                  errorLog += String::IntToString(NDBlineNo - 1);
                  errorLog += '\n';
              }
+#endif
 
              for (_i=yyleng-1; _i >= 0; _i--) {
                if ( yytext[_i] == ' ' || yytext[_i] == '\t' ||  yytext[_i] == '\n' || yytext[_i] == '\r') {
