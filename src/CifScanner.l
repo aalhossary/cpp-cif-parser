@@ -27,7 +27,7 @@
 
 CR      \r
 LF      \n
-EOL     (({CR}{LF})|{LF})
+EOL     (({CR}{LF})|{LF}|{CR}|({LF}{CR}))
 
 %%
 
