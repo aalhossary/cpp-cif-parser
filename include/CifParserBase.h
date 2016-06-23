@@ -84,7 +84,8 @@ class CifParser : public CifScanner
         **
         **  \post None
         **
-        **  \exception: None
+        **  \exception NotFoundException - if file with name \e fileName
+        **    does not exist
         */
         void Parse(const string& fileName, string& diagnostics,
           const std::string& parseLogFileName = std::string());
