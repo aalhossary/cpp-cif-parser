@@ -212,6 +212,7 @@ class DICParser : public DICScanner
         ISTable * format;
         ISTable * cattbl;
         ISTable * itemtbl;
+        ISTable * pdbxitemtbl;
         CifFile *ddl;
         vector<string> listcat, listitem;
         vector<string> listitem2;

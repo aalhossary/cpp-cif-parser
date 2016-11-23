@@ -96,10 +96,32 @@ DICParser::DICParser(DicFile* fo, CifFile* ddl_in, bool verbose)
     listitem.push_back("name");
     BlockName = ddl->GetFirstBlockName();
     itemtbl = block.GetTablePtr("item");
+    if (!itemtbl->IsColumnPresent("category_id"))
+    {
+        itemtbl->AddColumn("category_id");
+    }
+
+    pdbxitemtbl = block.GetTablePtr("pdbx_item");
+    if (pdbxitemtbl != NULL)
+    {
+        if (!pdbxitemtbl->IsColumnPresent("category_id"))
+        {
+            pdbxitemtbl->AddColumn("category_id");
+        }
+    }
+
     itemtbl->CreateIndex("index0",listitem);
+    if (pdbxitemtbl != NULL)
+    {
+        pdbxitemtbl->CreateIndex("index0",listitem);
+    }
 
     listitem2.clear(); listitem2.push_back("category_id"); listitem2.push_back("mandatory_code");
     itemtbl->CreateIndex("index2",listitem2);
+    if (pdbxitemtbl != NULL)
+    {
+        pdbxitemtbl->CreateIndex("index2",listitem2);
+    }
 
     DICParserP = this;
 }
@@ -1072,6 +1094,7 @@ void  DICParser::CheckDDL(void)
   listitem1.push_back("name");
 
   bool implicitFound = false;
+  bool pdbxImplicitFound = false;
 
   for (unsigned int i=0; i<numCols; i++)
   {
@@ -1099,6 +1122,31 @@ void  DICParser::CheckDDL(void)
             cout << "IMPLICIT FOUND FOR itemName ==" << elem1 << endl;
 #endif
             implicitFound = true;
+        }
+    }
+
+    if (pdbxitemtbl != NULL)
+    {
+        ret = pdbxitemtbl->FindFirst(target2, listitem1);
+        if (ret == pdbxitemtbl->GetNumRows())
+        {
+          log << "Item " << elem1 << " isn't defined; line " << NDBlineNo<< endl;
+          errorLog += "Item ";
+          errorLog += elem1;
+          errorLog += " isn't defined; line ";
+          errorLog += String::IntToString(NDBlineNo);
+          errorLog += '\n';
+        }
+        else
+        {
+            const string& mandCode = (*pdbxitemtbl)(ret, "mandatory_code");
+            if (String::IsCiEqual(mandCode, "implicit"))
+            {
+#ifdef VLAD_EXAMINE
+                cout << "PDBX IMPLICIT FOUND FOR itemName ==" << elem1 << endl;
+#endif
+                pdbxImplicitFound = true;
+            }
         }
     }
   }
@@ -1135,7 +1183,8 @@ void  DICParser::CheckDDL(void)
   }
   else
   {
-    if (!implicitFound)
+    if ((!implicitFound) && (!String::IsCiEqual(_curCategoryName,"pdbx_item")))
+    //if (!implicitFound)
     {
       vector<string> target2;
       target2.push_back(_curCategoryName);
@@ -1144,6 +1193,78 @@ void  DICParser::CheckDDL(void)
       if (listOut != itemtbl->GetNumRows())
       {
         const string& itemName = (*itemtbl)(listOut, "name");
+        string keywordName;
+        CifString::GetItemFromCifItem(keywordName,itemName);
+
+        string elem;
+        if (String::IsCiEqual(_curCategoryName,"dictionary") ||
+            String::IsCiEqual(_curCategoryName,"category"))
+        {
+          elem = _curDataBlockName;
+        }
+        else
+        {
+          elem = _tmpDataBlockNameSave;
+        }
+
+        // Original implementation (the same as in the else part of ifdef)
+        if (numCols == numCols2)
+        {
+          if (!_tbl->IsColumnPresent(keywordName))
+              _tbl->AddColumn(keywordName);
+        }
+        
+        for (int i=numRows; i>0; i--)
+        {
+            _tbl->UpdateCell(numRows2-i, keywordName, elem);
+        }
+      }
+    }
+  }
+
+
+  if (String::IsCiEqual(_curCategoryName,"pdbx_item"))
+  {
+    if (!(_prevtbl->IsColumnPresent("name")))
+    {
+      if (numRows == numRows2)
+      {
+        _tbl->AddColumn("name");
+      }
+
+      for (int i=numRows; i>0; i--)
+          _tbl->UpdateCell(numRows2-i, "name", _curDataBlockNameSave);
+    }
+
+    if (!_prevtbl->IsColumnPresent("category_id"))
+    {
+      string categoryName;
+      if (isSave==2)
+        CifString::GetCategoryFromCifItem(categoryName,_curDataBlockNameSave);
+      if (isSave==1)
+        CifString::GetCategoryFromCifItem(categoryName,_prevDataBlockNameSave);
+
+      if (numRows == numRows2)
+      {
+        _tbl->AddColumn("category_id");
+      }
+
+      for (int i=numRows; i>0; i--)
+          _tbl->UpdateCell(numRows2-i, "category_id", categoryName);
+    }
+  }
+  else
+  {
+    if ((!pdbxImplicitFound) && (!String::IsCiEqual(_curCategoryName,"item")) && (pdbxitemtbl != NULL))
+    //if (!pdbxImplicitFound)
+    {
+      vector<string> target2;
+      target2.push_back(_curCategoryName);
+      target2.push_back("implicit");
+      unsigned int listOut = pdbxitemtbl->FindFirst(target2, listitem2);
+      if (listOut != pdbxitemtbl->GetNumRows())
+      {
+        const string& itemName = (*pdbxitemtbl)(listOut, "name");
         string keywordName;
         CifString::GetItemFromCifItem(keywordName,itemName);
 
