@@ -11,7 +11,7 @@
 */
 
 
-/* 
+/*
   PURPOSE:    A DDL 2.1 compliant CIF file parser.
 */
 
@@ -194,7 +194,7 @@ void cifparser_error(const char *s)
 }
 
 void CifParser::Error(const char* s)
-/* 
+/*
  * Purpose:  yyerror() Print errors in CifParsr.log.
  */
 {
@@ -211,7 +211,7 @@ void CifParser::Error(const char* s)
   _err++;
 }
 
-void CifParser::Reset() 
+void CifParser::Reset()
 {
   if (_tbl && (_curItemNo > 0)) { // write the current table / management of _tbl by _fobj
       _ComplexWriteTable();
@@ -244,7 +244,7 @@ int CifParser::ProcessLoopDeclaration(void)
 /* ----------------------------------------------------------------------
      Purpose: CifParser::ProcessLoopDeclaration(void)
 
-              Handles initialization for a new loop, by creating a new 
+              Handles initialization for a new loop, by creating a new
               category and adding the current item name to this category.
    ---------------------------------------------------------------------- */
 {
@@ -309,12 +309,14 @@ int CifParser::ProcessLoopDeclaration(void)
 
   if (tablePresent)
   {
-    log << "Warning - Duplicate category name " << categoryName << 
-      " at line " << NDBlineNo << endl;
+    log << "Warning - Duplicate category name " << categoryName <<
+      " at line " << NDBlineNo <<  " in " << _curDataBlockName << endl;
     errorLog += "Warning - Duplicate category name ";
     errorLog += categoryName;
     errorLog += " at line ";
     errorLog += String::IntToString(NDBlineNo);
+    errorLog += " in ";
+    errorLog += _curDataBlockName;
     errorLog += '\n';
     _warn++;
     return(0);
@@ -337,10 +339,10 @@ int CifParser::ProcessItemNameList(void)
 /* ----------------------------------------------------------------------
    Purpose: CifParser::ProcessItemNameList(void)
 
-            Registers the item keyword for the the current item in the 
-	    current category.  Maintains an index array of "valid" keyword 
-	    names in fieldList[].  This array is used to indirectly 
-	    reference between keywords and values ...  
+            Registers the item keyword for the the current item in the
+	    current category.  Maintains an index array of "valid" keyword
+	    names in fieldList[].  This array is used to indirectly
+	    reference between keywords and values ...
  * ----------------------------------------------------------------------*/
 {
 
@@ -394,7 +396,7 @@ int CifParser::ProcessItemNameList(void)
 
   if (_curItemNo > _fieldListAlloc - 1)
   {
-    _fieldListAlloc = _curItemNo + _fieldListAlloc; 
+    _fieldListAlloc = _curItemNo + _fieldListAlloc;
     _fieldList.reserve(_fieldListAlloc);
   }
 
@@ -447,11 +449,13 @@ int CifParser::ProcessItemNameList(void)
   else
   {
     log << "Warning - Duplicate item name " << _tBufKeyword  <<
-      " at line " << NDBlineNo << endl;
+      " at line " << NDBlineNo << " in " << _curDataBlockName << endl;
     errorLog += "Warning - Duplicate item name ";
     errorLog += _tBufKeyword;
     errorLog += " at line ";
     errorLog += String::IntToString(NDBlineNo);
+    errorLog += " in ";
+    errorLog += _curDataBlockName;
     errorLog += '\n';
     _warn++;
     return(0);
@@ -468,7 +472,7 @@ int CifParser::ProcessValueList(void)
 /* ----------------------------------------------------------------------
      Purpose:  CifParser::ProcessValueList(void)
 
-               Add the current value to the appropriate column in the 
+               Add the current value to the appropriate column in the
                the current row.  Start a new row if necessary.
  * ----------------------------------------------------------------------*/
 {
@@ -589,7 +593,7 @@ int CifParser::ProcessItemValuePair(void)
 #if DEBUG
   if (_verbose)
   {
-    if (!_pBufValue.empty()) 
+    if (!_pBufValue.empty())
       log << "Processing " << _tBufKeyword << " at " <<  NDBlineNo << " value " << _pBufValue  << endl;
 
   }
@@ -654,11 +658,13 @@ int CifParser::ProcessItemValuePair(void)
 
   if (tablePresent)
   { //  duplicates a persistent table?
-    log << "Warning - Duplicate category name " << categoryName << " at line " << NDBlineNo << endl;
+    log << "Warning - Duplicate category name " << categoryName << " at line " << NDBlineNo << " in " << _curDataBlockName << endl;
     errorLog += "Warning - Duplicate category name ";
     errorLog += categoryName;
     errorLog += " at line ";
     errorLog += String::IntToString(NDBlineNo);
+    errorLog += " in ";
+    errorLog += _curDataBlockName;
     errorLog += '\n';
     _warn++;
 
@@ -667,13 +673,15 @@ int CifParser::ProcessItemValuePair(void)
 
   if (String::IsEqual(categoryName, _curCategoryName,
     _fobj->GetCaseSensitivity()) && _afterLoop)
-  { //  duplicates a persistent table-immediately after 
+  { //  duplicates a persistent table-immediately after
     // loop goes pair item-value for same category
-    log << "Warning - Duplicate category name " << categoryName << " at line " << NDBlineNo << endl;
+    log << "Warning - Duplicate category name " << categoryName << " at line " << NDBlineNo << " in " << _curDataBlockName << endl;
     errorLog += "Warning - Duplicate category name ";
     errorLog += categoryName;
     errorLog += " at line ";
     errorLog += String::IntToString(NDBlineNo);
+    errorLog += " in ";
+    errorLog += _curDataBlockName;
     errorLog += '\n';
     _warn++;
   }
@@ -712,14 +720,16 @@ int CifParser::ProcessItemValuePair(void)
 
   if (_tbl->IsColumnPresent(keywordName))
   {
-    log << "Warning - Duplicate item name " <<_tBufKeyword  << " at line " << NDBlineNo << endl;
+    log << "Warning - Duplicate item name " <<_tBufKeyword  << " at line " << NDBlineNo << " in " << _curDataBlockName << endl;
     errorLog += "Warning - Duplicate item name ";
     errorLog += _tBufKeyword;
     errorLog += " at line ";
     errorLog += String::IntToString(NDBlineNo);
+    errorLog += " in ";
+    errorLog += _curDataBlockName;
     errorLog += '\n';
     _warn++;
-  
+
     unsigned int numRows = _tbl->GetNumRows();
     if (!_pBufValue.empty())
     {
@@ -834,7 +844,7 @@ void CifParser::ProcessDataBlockName()
   if ((_tbl != NULL) && (_curItemNo > 0) && (!_curDataBlockName.empty()) &&
     (!_curCategoryName.empty()))
   {
-#if DEBUG    
+#if DEBUG
     if (_verbose) log << " Save category " << _curCategoryName << " in " << _curDataBlockName << endl;
 #endif
     _ComplexWriteTable();
@@ -861,7 +871,7 @@ void CifParser::ProcessDataBlockName()
     if (newDataBlock != _curDataBlockName)
     {
       // Issue a warning on duplicate data block
-      log << "Warning - Duplicate datablock name " << _curDataBlockName << 
+      log << "Warning - Duplicate datablock name " << _curDataBlockName <<
         " at line " << NDBlineNo << " replaced with " << newDataBlock <<
         endl;
       errorLog += "Warning - Duplicate datablock name ";
