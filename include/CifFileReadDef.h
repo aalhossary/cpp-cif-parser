@@ -10,7 +10,7 @@
 */
 
 
-/* 
+/*
   PURPOSE:    Definitions for selective parsing/reading cif file
 */
 
@@ -49,12 +49,12 @@ class CifFileReadDef
 
 
  public:
-  CifFileReadDef(std::vector<std::string> dblist,std::vector<std::string>clist,type dbtype = A, type ctype = A);
+  CifFileReadDef(std::vector<std::string> dblist,std::vector<std::string> clist,type dbtype = A, type ctype = A);
   CifFileReadDef(){_numCatsToRead = INVALID_NUM_CATS; _numReadCats = 0;};
   ~CifFileReadDef(){};
- 
+
   void SetDataBlockList(std::vector<std::string> dblist,type dbtype = A);
-  void SetCategoryList(std::vector<std::string>clist, type ctype = A);
+  void SetCategoryList(std::vector<std::string> clist, type ctype = A);
 
   void SetDataBlockListType(type dbtype = A) { _datablocklisttype=dbtype;};
   void SetCategoryListType(type ctype = A){_categorylisttype=ctype;};
