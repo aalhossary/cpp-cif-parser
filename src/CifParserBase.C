@@ -130,18 +130,7 @@ void CifParser::Parse(const string& fileName, string& diagnostics,
 
     OpenLog(logFileName, _verbose);
 
-    cifparser_in = cifIn;
-
-    int ret;
-
-    cifparser_restart(cifparser_in);
-
-    ret = cifparser_parse();
-    if (ret != 0)
-    {
-        int b = 0;
-        b++;
-    }
+    Parse(cifIn, diagnostics);
 
     fclose(cifIn);
 
@@ -154,6 +143,17 @@ void CifParser::Parse(const string& fileName, string& diagnostics,
     {
         log.close();
     }
+}
+
+void CifParser::Parse(FILE* cifIn, string &diagnostics) {
+
+    cifparser_in = cifIn;
+
+    int ret;
+
+    cifparser_restart(cifparser_in);
+
+    ret = cifparser_parse();
 
     if (this->errorLog.size() > 0)
     {
@@ -174,12 +174,6 @@ void CifParser::ParseString(const string& cifString, string& diagnostics)
     ret = cifparser_parse();
 
     cifparser__delete_buffer(bufferState);
-
-    if (ret != 0)
-    {
-        int b = 0;
-        b++;
-    }
 
     if (this->errorLog.size() > 0)
     {
@@ -298,7 +292,7 @@ int CifParser::ProcessLoopDeclaration(void)
     _readDef.IncreaseNumReadCats();
   }
 
-  // If category aready exists, log the warning
+  // If category already exists, log the warning
   bool tablePresent = false;
 
   if (_fobj->IsBlockPresent(_curDataBlockName))
