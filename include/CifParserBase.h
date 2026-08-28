@@ -100,6 +100,9 @@ class CifParser : public CifScanner
         **  \param[out] diagnostics - parsing result. If empty, parsing
         **    completed with no warnings or errors. If non-empty, there were
         **    parsing warnings and/or parsing errors.
+        **  \param[in] parseLogFileName - relative or absolute name of the file
+        **    where parsing log is to be stored. If empty, which is the
+        **    default, no parsing log is written.
         **
         **  \return None
         **
@@ -111,7 +114,8 @@ class CifParser : public CifScanner
         **
         **  \exception None
         */
-        void Parse(FILE *cifIn, string &diagnostics);
+        void Parse(FILE *cifIn, string &diagnostics,
+          const std::string& parseLogFileName = std::string());
 
         /**
         **  Parses the CIF data in a string.
