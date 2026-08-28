@@ -162,11 +162,9 @@ void CifParser::Parse(FILE* cifIn, string &diagnostics,
 
     cifparser_in = cifIn;
 
-    int ret;
-
     cifparser_restart(cifparser_in);
 
-    ret = cifparser_parse();
+    cifparser_parse();
 
     if (this->errorLog.size() > 0)
     {
@@ -187,9 +185,7 @@ void CifParser::ParseString(const string& cifString, string& diagnostics)
     CIFPARSER__BUFFER_STATE bufferState =
       cifparser__scan_string(cifString.c_str());
 
-    int ret;
-
-    ret = cifparser_parse();
+    cifparser_parse();
 
     cifparser__delete_buffer(bufferState);
 
