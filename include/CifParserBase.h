@@ -91,7 +91,9 @@ class CifParser : public CifScanner
           const std::string& parseLogFileName = std::string());
 
         /**
-        **  Parses the CIF file from an open FILE stream.
+        **  Parses the CIF file from an open FILE stream. Unlike the overload
+        **  that takes a file name, this method does not close the stream;
+        **  ownership of it stays with the caller.
         **
         **  \param[in] cifIn - an open file input stream to the file
         **    that is to be parsed.
@@ -101,9 +103,11 @@ class CifParser : public CifScanner
         **
         **  \return None
         **
-        **  \pre cifIn is open
+        **  \pre cifIn is an open FILE stream, positioned at the start of the
+        **    CIF data that is to be parsed.
         **
-        **  \post cifIn is still open after writing the CIF file
+        **  \post cifIn is left open; closing it remains the caller's
+        **    responsibility.
         **
         **  \exception None
         */
