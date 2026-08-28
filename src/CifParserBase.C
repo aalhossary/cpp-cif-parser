@@ -148,6 +148,8 @@ void CifParser::Parse(const string& fileName, string& diagnostics,
 void CifParser::Parse(FILE* cifIn, string &diagnostics,
   const string& parseLogFileName)
 {
+    diagnostics.clear();
+
     // The file-name overload opens its own parsing log before delegating
     // here, so a log is opened only when this method is called directly and
     // a log file name has been supplied.
